@@ -1,0 +1,33 @@
+# Dependencies
+markdown: kramdown
+highlighter: rouge
+plugins: 
+  - jekyll-paginate
+  - jekyll-gist
+  - jekyll-feed
+
+# Permalinks
+permalink: :title
+
+# Setup
+title: unixslayer
+tagline: ''
+description: ''
+url: https://unixslayer.github.io
+baseurl: '/'
+
+author:
+  name: 'unixslayer'
+  url: https://twitter.com/kicek_
+
+paginate: 5
+
+repository: unixslayer/unixslayer.github.io
+
+# Custom vars
+
+urls:
+  - { href: https://github.com/unixslayer, name: github }
+  - { href: https://hub.docker.com/u/unixslayer, name: docker }
+  - { href: https://twitter.com/kicek_, name: twitter }
+  - { href: https://keybase.io/unixslayer, name: keybase }
