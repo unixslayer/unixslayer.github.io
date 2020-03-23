@@ -23,11 +23,3 @@ author:
 paginate: 5
 
 repository: unixslayer/unixslayer.github.io
-
-# Custom vars
-
-urls:
-  - { href: https://github.com/unixslayer, name: github }
-  - { href: https://hub.docker.com/u/unixslayer, name: docker }
-  - { href: https://twitter.com/kicek_, name: twitter }
-  - { href: https://keybase.io/unixslayer, name: keybase }
