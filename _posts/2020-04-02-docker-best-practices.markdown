@@ -80,6 +80,7 @@ COPY composer.lock ./
 
 RUN composer install
 
+~~COPY . .~~
 COPY src ./
 
 EXPOSE 8080
