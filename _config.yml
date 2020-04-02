@@ -1,6 +1,5 @@
 # Dependencies
 markdown: kramdown
-highlighter: rouge
 plugins: 
   - jekyll-paginate
   - jekyll-gist
