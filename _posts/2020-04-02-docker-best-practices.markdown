@@ -308,3 +308,18 @@ EXPOSE 8080
 
 CMD ["/usr/sbin/apache2ctl", "-DFOREGROUND"]
 ```
+
+## Don't use latest for your own images
+
+`latest` is considered anti-pattern in Docker because it doesn't tell you which particular version you're dealing with. Therefore, when building an image that will be shared between team members or the community outside your organization, you should avoid using the `latest` tag.
+
+Locally, however, tagging an image as `latest` makes it easier and faster to work on it. Just remember to change the tag to a more descriptive one before pushing the image outside the development environment.
+
+A good tag is one that it describes:
+- what it concerns
+- when it was created
+- where someone can find more information about it
+
+You can use the branch name used to build the image to specify what the tag is about. The information when it was created is simply a timestamp. It is good to agree its format with other team members. For additional information, it's best to use commit or build ID.
+
+The above applies to tagging images in the software development process. If we operate according to a specific publishing cycle, subsequent, planned releases of our application will probably have a form resulting from the adopted versioning rules of the application when it enters production, e.g. Semantic Versioning. However, you may notice additional descriptive parts added to the tags that can tell us about the size of the image (e.g. `debian:9-slim`) or additional features (e.g. `php:7.4-apache`).
