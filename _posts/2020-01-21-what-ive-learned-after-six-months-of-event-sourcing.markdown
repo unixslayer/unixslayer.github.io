@@ -35,7 +35,7 @@ After Event Storming session we will end up with wall covered in stickers like �
 - “recipient account number was provided”
 - “transfer value was provided” – in most cases amount and currency will occur together
 
-… and so on. It is easier to add new events, which we didn’t discover yet or remove ones that was defined by mistake or are no longer needed. Like it is impossible to change the past in real life, tt can get very hard to change the history in application that runs for a while and is crucial for your business.
+… and so on. It is easier to add new events, which we didn’t discover yet, remove ones that was defined by mistake or no longer needed, or even migrating them between contexts. Like it is impossible to change the past in real life, tt can get very hard to change the history in application that runs for a while and is crucial for your business.
 
 ## Data, data, data … lots of data
 
