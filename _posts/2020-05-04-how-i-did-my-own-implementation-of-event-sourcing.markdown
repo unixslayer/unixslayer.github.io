@@ -20,7 +20,7 @@ I can understand theory, but I'm a visual learner and when it comes to use it in
 
 Project was shut down and just before that I found out that with the end of 2019 Prooph gave up with support for ES component. This was a signal for me to write something on my own. Which turned out to be quite simple.
 
-# Domain
+## Domain
 
 Event Sourcing can be adapted in any domain, however, on a specific example it will be easier to show how to achieve the goal. As an example take an online store, where customer can add to cart any product they want to buy. Notice, that this is not domain-centric article. Example will most likely have no sense from business perspective but it will be good enough to prove a concept.
 
@@ -551,7 +551,7 @@ final class Cart extends AggregateRoot
 
 ## Conclusion
 
-And this is pretty much it. Well... this in not entirely true. There are still some unresolved issues here, such as how to store events or how to implement aggregate snapshot, but these are all infrastructure-based issues. Having only those two classes, I'm able to start coding any domain. If you think that implementing Event Sourcing by yourself is too hard, or too much, you can always use ready-to-go framework like I did at first. I think this is fine, but making a domain dependent on a particular tool is not a good solution in the long run. 
+And this is pretty much it. Well... this in not entirely true. There are still some unresolved issues here, such as how to store events or how to implement aggregate snapshot, but these are all infrastructure-based issues. Having only those two classes, I'm able to start coding any domain. If you think that implementing Event Sourcing by yourself is too hard, or too much, you can always use ready-to-go framework like I did at first. I think this is fine, but making a domain dependent on a particular tool is not a good solution in the long run. If you already implement business logic, why not to implement something that is trivial yet powerful. It's not like you have to implement whole infrastructure yourself - leave that part for the experts.
 
 All the code with added tests is available on [github](https://github.com/unixslayer/event-sourcing).
 
