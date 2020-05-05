@@ -123,7 +123,7 @@ When an `Event` occurs, it represents a change in our application and is usually
 
 ## AggregateRoot
 
-`Aggregate` is a pattern in DDD which should be treated as a single unit of businness rules. `AggregateRoot` will provide a high-level domain API describing the functionalities of the context. Based on complexity, it may contain smaller `Aggregates`, but application won't have direct acces to them in other way that through `AggregateRoot` class.
+`Aggregate` is a pattern in DDD which should be treated as a single unit of businness rules. `AggregateRoot` will provide a high-level domain API describing the functionalities of the context that way application won't have direct acces to any of its components (like entities or value objects) in other way that through `AggregateRoot` class.
 
 In our example, `Cart` will be an `AggregateRoot`. And every time public method gets called, `Event` should be recorded.
 
@@ -304,7 +304,7 @@ $events = [
 
 As you can see, each event must have the aggregate identifier in which it was recorded. 
 
-And here comes the beauty of Event Sourcing. Having those events stored somewhere, we can recreate that state step by step just by applying them in our aggregate. Although I'm talking about applying only, since those events ware already recorded. `Cart` can do some additional stuff before recording an event, e.g. checking product availability. Now imagine, that we are recreating state with events from year ago having products that we don't even selling anymore. Adding those products should not be possible, so we need new method that allow us do what we intend to do without additional side effects.
+And here comes the beauty of Event Sourcing. Having those events stored somewhere, we can recreate that state step by step just by applying them in our aggregate. Although I'm talking about applying only, since those events ware already recorded. `Cart` can do some additional stuff before recording an event, e.g. if the business rule says that the basket value cannot be higher than the one defined, `Cart` should check that whenever product is added. Now imagine, that we are recreating state with events from year ago and value limit has changed. This type of change should apply today, but we should still be able to recreate the state of the basket before it was introduced, so we need new method that allows us to do that without additional side effects.
 
 ```php
 <?php
@@ -395,7 +395,7 @@ Lets see what our event class is made of:
 
 I also assumed that later in the future, when I'll start to implement Event Store into application, I'll have to serialize events in some way. `_aggregateId` and `_version` could be held in private attributes. I just like it that way.
 
-Now our domain events will look like this:
+Now our events will look like this:
 
 
 ```php
@@ -483,7 +483,7 @@ abstract class AggregateRoot
 }
 ```
 
-Domain aggregate can now contain only domain logic, so change it that way:
+Aggregate can now contain only domain logic, so change it that way:
 
 ```php
 <?php
@@ -551,7 +551,7 @@ final class Cart extends AggregateRoot
 
 ## Conclusion
 
-And this is pretty much it. Well... this in not entirely true. There are still some unresolved issues here, such as how to store events or how to implement aggregate snapshot, but these are all infrastructure-based issues. Having only those two classes, I'm able to start coding any domain. If you think that implementing Event Sourcing by yourself is too hard, or too much, you can always use ready-to-go framework like I did at first. I think this is fine, but making a domain dependent on a particular tool is not a good solution in the long run. If you already implement business logic, why not to implement something that is trivial yet powerful. It's not like you have to implement whole infrastructure yourself - leave that part for the experts.
+This is pretty much it. Well... ok, this in not entirely true. There are still some unresolved issues here, such as how to store events or how to implement aggregate snapshot, but these are all infrastructure-based issues. Having only those two classes, I'm able to start coding any domain. If you think that implementing Event Sourcing by yourself is too hard, or too much, you can always use ready-to-go framework like I did at first. I think this is fine, but making a domain dependent on a particular tool is not a good solution in the long run. If you already implement business logic, why not to implement something that is trivial yet powerful. It's not like you have to implement whole infrastructure yourself - leave that part for the experts.
 
 All the code with added tests is available on [github](https://github.com/unixslayer/event-sourcing).
 
