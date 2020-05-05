@@ -553,6 +553,10 @@ final class Cart extends AggregateRoot
 
 This is pretty much it. Well... ok, this in not entirely true. There are still some unresolved issues here, such as how to store events or how to implement aggregate snapshot, but these are all infrastructure-based issues. Having only those two classes, I'm able to start coding any domain. If you think that implementing Event Sourcing by yourself is too hard, or too much, you can always use ready-to-go framework like I did at first. I think this is fine, but making a domain dependent on a particular tool is not a good solution in the long run. If you already implement business logic, why not to implement something that is trivial yet powerful. It's not like you have to implement whole infrastructure yourself - leave that part for the experts.
 
+### Post scriptum
+
+One more thing worth mentioning here is that those Event Sourcing events should only be used in aggregate context. There can be temptation to publish them, so other context may react on them, but you should rather use something especially created for that purpose. Those Domain Events will be used to communicate contexts between each other while Aggregate Events should only be used to recreate an Aggregate or Read Model which is also direct projection of state of an aggregate.
+
 All the code with added tests is available on [github](https://github.com/unixslayer/event-sourcing).
 
 [CQRS, Task Based UIs, Event Sourcing agh!](http://codebetter.com/gregyoung/2010/02/16/cqrs-task-based-uis-event-sourcing-agh/)
