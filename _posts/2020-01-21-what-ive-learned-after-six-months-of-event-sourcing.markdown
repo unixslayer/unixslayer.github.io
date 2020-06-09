@@ -39,13 +39,13 @@ After Event Storming session we will end up with wall covered in stickers like â
 
 ## Data, data, data â€¦ lots of data
 
-Keeping every event that happened in our application is no doubt advantage of Event Sourcing. That way we can, for example reproduce user behavior or state of whole application; use historical data in order to generate any kind of reports. As long we have events, we can do anything. Those events are saved in so called `Event Store`.
+Keeping every event that happened in our application is no doubt advantage of Event Sourcing. That way we can, for example reproduce user behavior or state of whole application; use historical data in order to generate any kind of reports. As long we have events, we can do anything. Those events are saved in so called `Event Streams` in `Event Store`.
 
-We can have one Event Store for all events. Imagine that our application orders around 200 transfers per minute, and in single entity lifetime around 50 events may occur. As a result, we end up with a single table in the database that swells very quickly. To reconstitute aggregate from history will be less and less optimal each day. As long snapshotting can help us a bit here, still it is not good solution for large application.
+We can have one Event Stream for all events. Imagine that our application orders around 200 transfers per minute, and in single entity lifetime around 50 events may occur. As a result, we end up with a single table in the database that swells very quickly. To reconstitute aggregate from history will be less and less optimal each day. As long snapshotting can help us a bit here, still it is not good solution for large application.
 
-Another way is to have an Event Store for each entity. Again, not a good solution. With 200 transactions per minute we will end up with a lot of small tables in our database in no time. Depending on amount of entity lifetime, we can have only a little amount data in those tables. In addition, with a large number of entities, it can be difficult to debug having a large number of tables, not to mention the level of irritation from the staff managing the database.
+Another way is to have an Event Stream for each entity. Again, not a good solution. With 200 transactions per minute we will end up with a lot of small tables in our database in no time. Depending on amount of entity lifetime, we can have only a little amount data in those tables. In addition, with a large number of entities, it can be difficult to debug having a large number of tables, not to mention the level of irritation from the staff managing the database.
 
-Another solution is to have a Store for every entity within application. As long as solution should depend on needs, I think that this is the most optimal and comfortable way to deal with events. This gives us more intuitive context bounding, each stored in its own place. Debug process should be also less problematic since all we have to know is context we are working with.
+Another solution is to have one Stream for every aggregate within application. As long as solution should depend on needs, I think that this is the most optimal and comfortable way to deal with events. This gives us more intuitive context bounding, each stored in its own place. Debug process should be also less problematic since all we have to know is context we are working with.
 
 ## Aggregates/entities are not for reading data
 

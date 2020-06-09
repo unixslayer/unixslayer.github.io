@@ -3,7 +3,7 @@ title: How I did my own implementation of Event Sourcing
 layout: post
 date: 2020-05-04
 categories: [Developer workshop]
-tags: [event sourcing, library, framework, php, prooph, broadway, diy]
+tags: [event sourcing, library, framework, php, prooph, broadway, diy, ddd, aggregate, event]
 ---
 
 After playing around with [prooph](https://github.com/prooph/event-sourcing) and [broadway](https://github.com/broadway/broadway), I finally decided to write something on my own. Took me little more than an hour and two classes later I have what I need for now to work on domain. Seriously. Writing this article took me more time than actual implementation.
@@ -68,18 +68,18 @@ declare(strict_types=1);
 
 namespace Unixslayer\Domain;
 
-use Ramsey\Uuid\UuidInterface;
+use Money\Currency;
 
 final class Cart
 {
-    public function __construct(UuidInterface $consumerId)
+    public function __construct(Currency $currency)
     {
         // ... some logic
     }
 }
 ```
 
-Here I assumed, that cart will have a relation to authorized `Consumer` using its [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier). Normally when creating new instance of `Cart`, `$consumerId` would be assigned to private attribute. However, Event Sourcing assumes that instead of changing the state, you need to register events from which the state will be restored.
+Here I assumed, that each cart can contain only product with the same currency. Normally when creating new instance of `Cart`, `$currency` would be assigned to private attribute. However, Event Sourcing assumes that instead of changing the state, you need to register events from which the state will be restored.
 
 ## Event
 
@@ -92,8 +92,9 @@ Events must be immutable, because once somthing happen, it stays in the past so 
 
 declare(strict_types=1);
 
-namespace Unixslayer\Domain;
+namespace Unixslayer\Domain\Event;
 
+use Money\Currency;
 use Ramsey\Uuid\UuidInterface;
 
 final class CartWasCreated
@@ -101,10 +102,10 @@ final class CartWasCreated
     private UuidInterface $cartId;
     private UuidInterface $consumerId;
 
-    public function __construct(UuidInterface $cartId, UuidInterface $consumerId)
+    public function __construct(UuidInterface $cartId, Currency $currency)
     {
         $this->cartId = $cartId;
-        $this->consumerId = $consumerId;
+        $this->currency = $currency;
     }
 
     public function cartId(): UuidInterface
@@ -112,14 +113,14 @@ final class CartWasCreated
         return $this->cartId;
     }
 
-    public function consumerId(): UuidInterface
+    public function currency(): Currency
     {
-        return $this->consumerId;
+        return $this->currency;
     }
 }
 ```
 
-When an `Event` occurs, it represents a change in our application and is usually the result of some command. `CartWasCreated` event can occur when a user logs on to an application.
+When an `Event` occurs, it represents a change in our application and is usually the result of some command. 
 
 ## AggregateRoot
 
@@ -134,17 +135,21 @@ declare(strict_types=1);
 
 namespace Unixslayer\Domain;
 
+use Money\Currency;
+use Money\Money;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use Unixslayer\Domain\Event;
 
 final class Cart
 {
     private UuidInterface $cartId;
-    private UuidInterface $consumerId;
+    private Money $balance;
     private array $events = [];
 
-    public function __construct(UuidInterface $consumerId)
+    public function __construct(Currency $currency)
     {
-        $this->recordThat(new CartWasCreated(Uuid::uuid1(), $consumerId));
+        $this->recordThat(new Event\CartWasCreated(Uuid::uuid1(), $currency));
     }
 
     private function recordThat($event): void
@@ -156,15 +161,15 @@ final class Cart
 
     private function apply($event): void
     {
-        if ($event instanceof CartWasCreated) {
+        if ($event instanceof Event\CartWasCreated) {
             $this->cartCreated($event);
         }
     }
 
-    private function cartCreated(CartWasCreated $event): void
+    private function cartCreated(Event\CartWasCreated $event): void
     {
         $this->cartId = $event->cartId();
-        $this->consumerId = $event->consumerId()
+        $this->balance = new Money(0, $event->currency());
     }
 }
 ```
@@ -186,9 +191,10 @@ Since `Product` class can be added to `Cart`, and we are recording this as somet
 
 declare(strict_types=1);
 
-namespace Unixslayer\Domain;
+namespace Unixslayer\Domain\Event;
 
 use Ramsey\Uuid\UuidInterface;
+use Unixslayer\Domain\Product;
 
 final class ProductWasAddedToCart
 {
@@ -223,6 +229,7 @@ declare(strict_types=1);
 namespace Unixslayer\Domain;
 
 use Ramsey\Uuid\UuidInterface;
+use Unixslayer\Domain\Event;
 
 final class Cart
 {
@@ -240,7 +247,13 @@ final class Cart
 
     public function addProduct(Product $product): void
     {
-        $this->recordThat(new ProductWasAddedToCart($this->cartId, $product));
+        $cartCurrency = $this->balance->getCurrency();
+        $productCurrency = $product->price()->getCurrency();
+        if (!$productCurrency->equals($cartCurrency)) {
+            throw new \InvalidArgumentException(sprintf('Cart can contain only products with %s currency. %s given.', $cartCurrency, $productCurrency));
+        }
+
+        $this->recordThat(new Event\ProductWasAddedToCart($this->cartId, $product));
     }
     
     // ... skipping obvious and unchanged code
@@ -249,12 +262,12 @@ final class Cart
     {
         // ...
 
-        if ($event instanceof ProductWasAddedToCart) {
+        if ($event instanceof Event\ProductWasAddedToCart) {
             $this->productAddedToCart($event);
         }
     }
 
-    private function productAddedToCart(ProductWasAddedToCart $event): void
+    private function productAddedToCart(Event\ProductWasAddedToCart $event): void
     {
         $productId = $event->product()->productId();
         if (array_key_exists((string)$productId, $this->products)) {
@@ -264,11 +277,13 @@ final class Cart
             $this->productsCount[(string)$productId] = 1;
             $this->productsBalance[(string)$productId] = $event->product()->price();
         }
+
+        $this->balance = $this->balance->add($event->product()->price());
     }
 }
 ```
 
-When the aggregate public method is called event must be recorded instead of changing state directly. The change of state can take place only by applying the registered event, which will now be explained why.
+When the aggregate public method is called event must be recorded instead of changing state directly. The change of state can take place only by applying the registered event, which will now be explained why. Just before event gets recorded, we are checking if given product price has the same currency as carts. This is vary simple example on how aggregate can protect business invariants.
 
 ## Recreate the state
 
@@ -281,21 +296,21 @@ declare(strict_types=1);
 
 use Unixslayer\Domain;
 
-// ... assuming that $consumerId and products are valid variables
+// ... assuming that $currency and products are valid variables
 
-$cart = new Cart($consumerId);
+$cart = new Cart($currency);
 $cart->addProduct($product1);
 $cart->addProduct($product2);
 $cart->addProduct($product1); // adding the same product twice, just for fun
 ```
 
-First we have to create `Cart` instance so later, consumer can add product into it. From user point of view this looks legit, right? 
+First we have to create `Cart` instance so later, consumer can add product into it. From user point of view this looks legit, right?
 
 From the aggregate perspective, this will be just a serie of events that happened in application.
 
 ```php
 $events = [
-    new CartWasCreated($cartId, $consumerId),
+    new CartWasCreated($cartId, $currency),
     new ProductWasAddedToCart($cartId, $product1),
     new ProductWasAddedToCart($cartId, $product2),
     new ProductWasAddedToCart($cartId, $product1),
@@ -397,15 +412,18 @@ I also assumed that later in the future, when I'll start to implement Event Stor
 
 Now our events will look like this:
 
-
 ```php
 <?php
 
 declare(strict_types=1);
 
-namespace Unixslayer\Domain;
+namespace Unixslayer\Domain\Event;
 
+use Money\Currency;
+use Money\Money;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use Unixslayer\Domain\Product;
 use Unixslayer\EventSourcing\Event;
 
 final class ProductWasAddedToCart extends Event
@@ -413,7 +431,9 @@ final class ProductWasAddedToCart extends Event
     public static function occur(UuidInterface $cartId, Product $product): ProductWasAddedToCart
     {
         $payload = [
-            'product' => $product,
+            'productId' => $product->productId()->toString(),
+            'productPrice' => $product->price()->getAmount(),
+            'productCurrency' => $product->price()->getCurrency()->getCode(),
         ];
 
         return new static($cartId, $payload);
@@ -421,10 +441,14 @@ final class ProductWasAddedToCart extends Event
 
     public function product(): Product
     {
-        return $this->payload['product'];
+        $productId = Uuid::fromString($this->payload()['productId']);
+        $price = new Money($this->payload()['productPrice'], new Currency($this->payload()['productCurrency']));
+
+        return new Product($productId, $price);
     }
 }
 ```
+
 Named constructor validates data associated with event and additionally gives us more readable usage:
 
 ```php
@@ -432,6 +456,8 @@ Named constructor validates data associated with event and additionally gives us
 $this->recordThat(ProductWasAddedToCart::occur(...));
 // ...
 ```
+
+Keep in mind that payload should contain scalar types. This will be helpful later when will be implementing storage for events.
 
 As for the aggregate, we need to separate everything that cannot be considered as business logic:
 
@@ -442,7 +468,6 @@ declare(strict_types=1);
 
 namespace Unixslayer\EventSourcing;
 
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 abstract class AggregateRoot
@@ -451,9 +476,21 @@ abstract class AggregateRoot
     private int $version = 0;
     private array $recordedEvents = [];
 
+    protected function __construct()
+    {
+    }
+
     public function version(): int
     {
         return $this->version;
+    }
+
+    public function recordedEvents(): array
+    {
+        $recorderEvents = $this->recordedEvents;
+        $this->recordedEvents = [];
+
+        return $recorderEvents;
     }
 
     public static function fromHistory(iterable $eventsHistory): self
@@ -481,9 +518,10 @@ abstract class AggregateRoot
 
     abstract protected function apply(Event $event): void;
 }
+
 ```
 
-Aggregate can now contain only domain logic, so change it that way:
+I made constructor protected, so aggregate root can only be created by static factories. `Cart` can now contain only domain logic, so change it that way:
 
 ```php
 <?php
@@ -492,32 +530,49 @@ declare(strict_types=1);
 
 namespace Unixslayer\Domain;
 
+use Money\Currency;
+use Money\Money;
 use Ramsey\Uuid\UuidInterface;
+use Unixslayer\Domain\Event\CartWasCreated;
+use Unixslayer\Domain\Event\ProductWasAddedToCart;
 use Unixslayer\EventSourcing\AggregateRoot;
+use Unixslayer\EventSourcing\Event;
 
 final class Cart extends AggregateRoot
 {
-    private UuidInterface $consumerId;
-    /**
-     * @var Money[]
-     */
+    private Money $balance;
+
+    /** @var Money[] */
     private array $productsBalance = [];
-    /**
-     * @var int[]
-     */
+
+    /** @var int[] */
     private array $productsCount = [];
 
-    public function __construct(UuidInterface $consumerId)
+    public static function create(UuidInterface $uuid, Currency $currency): Cart
     {
-        $this->recordThat(CartWasCreated::occur(Uuid::uuid1(), $consumerId));
+        $cart = new self();
+        $cart->recordThat(Event\CartWasCreated::occur($uuid, $currency));
+
+        return $cart;
     }
 
     public function addProduct(Product $product): void
     {
-        $this->recordThat(ProductWasAddedToCart::occur($this->id, $product));
+        $cartCurrency = $this->balance->getCurrency();
+        $productCurrency = $product->price()->getCurrency();
+        if (!$productCurrency->equals($cartCurrency)) {
+            throw new \InvalidArgumentException(sprintf('Cart can contain only products with %s currency. %s given.', $cartCurrency, $productCurrency));
+        }
+
+        $this->recordThat(Event\ProductWasAddedToCart::occur($this->id, $product));
     }
 
-    protected function apply($event): void
+    public function balance(): Money
+    {
+        return $this->balance;
+    }
+
+    protected function apply(Event $event): void
     {
         if ($event instanceof CartWasCreated) {
             $this->cartCreated($event);
@@ -531,22 +586,25 @@ final class Cart extends AggregateRoot
     private function cartCreated(CartWasCreated $event): void
     {
         $this->id = $event->aggregateId();
-        $this->consumerId = $event->consumerId()
+        $this->balance = new Money(0, $event->currency());
     }
 
     private function productAddedToCart(ProductWasAddedToCart $event): void
     {
         $product = $event->product();
         $productId = $product->productId();
-        if (array_key_exists((string)$productId, $this->products)) {
+        if (array_key_exists((string)$productId, $this->productsCount)) {
             ++$this->productsCount[(string)$productId];
             $this->productsBalance[(string)$productId] = $this->productsBalance[(string)$productId]->add($product->price());
         } else {
             $this->productsCount[(string)$productId] = 1;
             $this->productsBalance[(string)$productId] = $product->price();
         }
+
+        $this->balance = $this->balance->add($product->price());
     }
 }
+
 ```
 
 ## Conclusion
