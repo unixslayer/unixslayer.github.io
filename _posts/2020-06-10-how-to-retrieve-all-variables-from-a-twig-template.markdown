@@ -6,7 +6,7 @@ categories: [Developer workshop]
 tags: [symfony, symfony 5, framework, twig, extensions, debug]
 ---
 
-Just had to figure out how to retrieve all variables from a Twig Template. Of course there is a `DebugExtension` which allows me to use `{{ dump() }}` in template. But I couldn't use it because I wasn't rendering my template. Here is a scenario...
+Just had to figure out how to retrieve all variables from a Twig Template. Of course there is a `DebugExtension` which allows me to use {% raw %}`{{ dump() }}`{% endraw %} in template. But I couldn't use it because I wasn't rendering my template. Here is a scenario...
 
 - application is used to send emails which content is a Twig templates, stored in database.
 - templates can use variables within its content.
@@ -14,7 +14,7 @@ Just had to figure out how to retrieve all variables from a Twig Template. Of co
 
 If you try to render template without passing expected variables, Twig will throw an exception. You can, of course, handle it in template by checking if variable is defined in current context, but some variables might by required and because users can define their own templates, this is not so obvious to do. We have decided to validate users request and check if all variables were send. We have template content, so we can always write awesome regular expression for that right? Well, not really. It would be better to use Twig for that.
 
-When Twig creates a template it create small chunks defined as `Twig\Node\Node` objects which are used later for render. Expressions, like `{{ variable }}`, are defined as `Twig\Node\PrintNode` which has its own nodes. Here we can have `Twig\Node\Expression\NameExpression` if variables are just printing, `Twig\Node\Expression\FilterExpression` if we use filters on variables and `Twig\Node\Expression\FunctionExpression` for function usage. Each of those `Expressions` can help us retrieve variable name which is contained in `name` attribute of that `Expression`. Enough said, lets dig in to code.
+When Twig creates a template it create small chunks defined as `Twig\Node\Node` objects which are used later for render. Expressions, like {% raw %}`{{ variable }}`{% endraw %}, are defined as `Twig\Node\PrintNode` which has its own nodes. Here we can have `Twig\Node\Expression\NameExpression` if variables are just printing, `Twig\Node\Expression\FilterExpression` if we use filters on variables and `Twig\Node\Expression\FunctionExpression` for function usage. Each of those `Expressions` can help us retrieve variable name which is contained in `name` attribute of that `Expression`. Enough said, lets dig in to code.
 
 ```php
 class TemplateVariablesVisitor implements NodeVisitorInterface
@@ -110,7 +110,7 @@ use Twig\NodeVisitor\NodeVisitorInterface;
 $twig = new Environment(new ArrayLoader());
 $visitor = new TemplateVariablesVisitor();
 $twig->addNodeVisitor($visitor);
-
+{% raw %}
 $template = <<<TWIG
 simple variable {{ variable1 }}
 multiline {{ variable2 }}
@@ -118,7 +118,7 @@ multiline {{ variable2 }}
 filters {{ midified|upper }}
 functions {{ max(variable1, variable2|upper, min(variable3)) }}
 TWIG;
-
+{% endraw %}
 $twig->createTemplate($template);
 
 var_dump($visitor->params());
