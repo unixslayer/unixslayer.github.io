@@ -115,7 +115,7 @@ $template = <<<TWIG
 simple variable {{ variable1 }}
 multiline {{ variable2 }}
 
-filters {{ midified|upper }}
+filters {{ variable3|upper }}
 functions {{ max(variable1, variable2|upper, min(variable3)) }}
 TWIG;
 {% endraw %}
