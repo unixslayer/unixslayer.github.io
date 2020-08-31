@@ -2,7 +2,7 @@
 title: Magento – Certification
 layout: post
 date: 2019-05-08
-categories: [Developer workshop]
+categories: [diary]
 tags: [certification, magento, thebad, thegood]
 ---
 

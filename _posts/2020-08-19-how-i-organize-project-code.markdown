@@ -2,7 +2,7 @@
 title: How I organize project code
 layout: post
 date: 2020-08-19
-categories: [Developer workshop]
+categories: [tech]
 tags: [workshop, decouple code, infrastructure, domain, bounded context, subdomain]
 ---
 

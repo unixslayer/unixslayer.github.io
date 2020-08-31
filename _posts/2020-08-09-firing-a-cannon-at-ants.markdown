@@ -2,7 +2,7 @@
 title: Firing a cannon at ants
 layout: post
 date: 2020-08-09
-categories: [Developer workshop]
+categories: [diary]
 tags: [DDD, CQRS, Event Sourcing, Event Storming, Event Modeling, workshop]
 ---
 

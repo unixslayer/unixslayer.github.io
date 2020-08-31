@@ -1,8 +1,8 @@
 ---
-title: Diary entry – Monday, September 18th
+title: Monday, September 18th
 layout: post
 date: 2019-06-25
-categories: [Programmer diaries]
+categories: [true-events]
 tags: [based on true events, developer stories, diary, funny, programmer]
 ---
 

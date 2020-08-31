@@ -2,7 +2,7 @@
 title: When developer becomes a senior developer
 layout: post
 date: 2019-05-31
-categories: [Developer workshop]
+categories: [diary]
 tags: [developer, improvement, seniority]
 ---
 

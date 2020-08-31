@@ -2,7 +2,7 @@
 title: How to retrieve all Variables from a Twig Template
 layout: post
 date: 2020-06-10
-categories: [Developer workshop]
+categories: [tech]
 tags: [symfony, symfony 5, framework, twig, extensions, debug]
 ---
 

@@ -1,8 +1,8 @@
 ---
-title: Diary entry – Wednesday, 5th July
+title: Wednesday, 5th July
 layout: post
 date: 2019-06-11
-categories: [Programmer diaries]
+categories: [true-events]
 tags: [based on true events, developer stories, diary, funny, programmer]
 ---
 

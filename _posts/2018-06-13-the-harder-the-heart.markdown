@@ -2,7 +2,7 @@
 title: The harder the heart...
 layout: post
 date: 2018-06-13
-categories: [Programmer diaries]
+categories: [diary]
 tags: [based on true events, developer stories, funny, programmer]
 ---
 

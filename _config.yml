@@ -1,7 +1,6 @@
 # Dependencies
 markdown: kramdown
 plugins: 
-  - jekyll-paginate
   - jekyll-gist
   - jekyll-feed
 
@@ -13,12 +12,22 @@ title: unixslayer
 tagline: ''
 description: ''
 url: https://unixslayer.github.io
-baseurl: '/'
+baseurl: ''
 
 author:
   name: 'unixslayer'
   url: https://twitter.com/kicek_
 
-paginate: 5
-
 repository: unixslayer/unixslayer.github.io
+
+collections:
+  category:
+    output: true
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: category
+    values:
+      layout: "category"

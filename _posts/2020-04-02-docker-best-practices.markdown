@@ -2,7 +2,7 @@
 title: Docker - best practices
 layout: post
 date: 2020-04-02
-categories: [Developer workshop]
+categories: [tech]
 tags: [docker, best practices, howto, build, tag]
 ---
 

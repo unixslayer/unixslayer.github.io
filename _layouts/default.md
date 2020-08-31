@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <html lang="en-us">
-
   {% include head.html %}
-
-  <body class="theme-base-unix">
-
-    {% include sidebar.html %}
-
+  <body>
+    {% include sidebar.md %}
     <div class="content container">
       {{ content }}
     </div>

@@ -1,8 +1,8 @@
 ---
-title: Diary entry – Thursday, 1st June
+title: Thursday, 1st June
 layout: post
 date: 2019-06-03
-categories: [Programmer diaries]
+categories: [true-events]
 tags: [based on true events, developer stories, diary, funny, programmer]
 ---
 

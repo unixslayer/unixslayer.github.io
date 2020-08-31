@@ -2,7 +2,7 @@
 title: How I did my own implementation of Event Sourcing
 layout: post
 date: 2020-05-04
-categories: [Developer workshop]
+categories: [tech]
 tags: [event sourcing, library, framework, php, prooph, broadway, diy, ddd, aggregate, event]
 ---
 

@@ -2,7 +2,7 @@
 title: Making friendly configuration in Symfony without a Bundle
 layout: post
 date: 2020-05-07
-categories: [Developer workshop]
+categories: [tech]
 tags: [no bundle, configuration, friendly configuration, symfony, symfony 5, framework, php, extensions]
 ---
 

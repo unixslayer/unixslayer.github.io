@@ -2,7 +2,7 @@
 title: PSD2 is great… but it’s not a big deal.
 layout: post
 date: 2019-09-24
-categories: [Programmer diaries]
+categories: [diary]
 tags: [API, money, online banking, open banking, payments, PSD2, REST, security]
 ---
 

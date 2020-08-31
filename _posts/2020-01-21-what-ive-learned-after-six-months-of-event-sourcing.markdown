@@ -2,7 +2,7 @@
 title: What I’ve learned after six months of Event Sourcing
 layout: post
 date: 2020-01-21
-categories: [Developer workshop]
+categories: [diary]
 tags: [aggregates, architecture, Domain-Driven Design, entities, events, EventSourcing, workshop]
 ---
 

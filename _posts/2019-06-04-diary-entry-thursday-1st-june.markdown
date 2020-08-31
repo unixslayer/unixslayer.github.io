@@ -1,8 +1,8 @@
 ---
-title: Diary entry – Monday, 12th June
+title: Monday, 12th June
 layout: post
 date: 2019-06-04
-categories: [Programmer diaries]
+categories: [true-events]
 tags: [based on true events, developer stories, diary, funny, programmer]
 ---
 

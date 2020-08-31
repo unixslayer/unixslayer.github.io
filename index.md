@@ -5,20 +5,7 @@ title: Articles
 
 <div class="posts">
   {% for post in site.posts %}
-  <div class="post">
-    <h1 class="post-title">
-      <a href="{{ post.url }}">
-        {{ post.title }}
-      </a>
-    </h1>
-
-    <span class="post-date">
-      {{ post.date | date_to_string }}
-      {% for tag in post.tags %}<span class="tag">#{{ tag }}</span>{% endfor %}
-    </span>
-
-    {{ post.excerpt }}
-  </div>
+    {% include post-excerpt.md %}
   {% endfor %}
 </div>
 

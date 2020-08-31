@@ -2,7 +2,7 @@
 title: Running Docker behind proxy
 layout: post
 date: 2019-08-07
-categories: [Developer workshop]
+categories: [tech]
 tags: [configuration, DevOps, Docker, proxy, Ubuntu]
 ---
 

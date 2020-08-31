@@ -2,7 +2,7 @@
 title: Implementing Aggregate Repository
 layout: post
 date: 2020-06-09
-categories: [Developer workshop]
+categories: [tech]
 tags: [event sourcing, php, prooph, diy, ddd, aggregate, repository, event store, events]
 ---
 

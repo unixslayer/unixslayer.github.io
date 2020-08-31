@@ -2,7 +2,7 @@
 title: Obfuscation with Cesar Cipher
 layout: post
 date: 2019-06-17
-categories: [Developer workshop]
+categories: [tech]
 tags: [cesar cipher, cryptography, obfuscation, php, rot13, security]
 ---
 
