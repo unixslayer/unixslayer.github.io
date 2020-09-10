@@ -95,7 +95,7 @@ Sometimes it happens that while working on a project, certain components may be 
 
 ## Maintaining boundaries
 
-No matter how the application code is divided, as long as all contexts and layers intertwine, separating the code in any way becomes just a hard-to-maintain art. Here `deptrac` comes with help. Its configuration allows us to define how  the division of individual contexts and the dependencies between them - shared contexts by definition will be ... shared.
+No matter how the application code is divided, as long as all contexts and layers intertwine, separating the code in any way becomes just a hard-to-maintain art. Here `deptrac` comes with help. Its configuration allows us to define the division of individual contexts and the dependencies between them - shared contexts by definition will be ... shared.
 
 ```yaml
 ; depfile.yaml
