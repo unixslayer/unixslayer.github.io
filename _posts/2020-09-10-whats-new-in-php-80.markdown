@@ -152,5 +152,5 @@ str_starts_with($haystack, $needle);
 str_contains('abc', 'a');
 ```
 
-[](https://wiki.php.net/rfc/add_str_starts_with_and_ends_with_functions)
-[](https://wiki.php.net/rfc/str_contains)
+[PHP RFC: Add str_starts_with() and str_ends_with() functions](https://wiki.php.net/rfc/add_str_starts_with_and_ends_with_functions)
+[PHP RFC: str_contains](https://wiki.php.net/rfc/str_contains)
