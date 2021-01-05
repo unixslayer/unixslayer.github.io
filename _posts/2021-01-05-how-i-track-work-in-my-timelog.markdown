@@ -1,5 +1,5 @@
 ---
-title: Hamster
+title: How I track work in my timelog
 layout: post
 date: 2021-01-05
 categories: [tech]
