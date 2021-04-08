@@ -14,7 +14,7 @@ In discussion about whether to estimate or not there are pretty decent arguments
 
 People are exposed to cognitive biases. Some are dealing with them better, some worse but they apply to everyone without exception. We have to struggle with them every time a decision or judgement needs to be made and we don't event realize that something wrong is going on. 
 
-We have a tendency to make a decision on first information we receive. Lets say that someone is asking us to make a call out of thin air if the fastest car in the world can ride with the speed higher or lover than 500 km/h and how fast. Many people will probably try to answer this question in reference to received information - 500 km/h. This is called anchoring. 
+We have a tendency to make a decision on first information we receive. Lets say that I have something to sell for $30000. After a week or so when you ask me again I'll tell you that I want $20000 for the same thing. If we manage to close the deal right away because your only motivation was dropping the price down 1/3, it is because an anchoring bias. It makes us not to validate reliability of information we received making decision.
 
 Sometimes we make our decisions based on our optimistic beliefs. This is understandable - we don't want to think about problems and issues that may occur. But this wishful thinking make our estimations even worse because world is not a fairytale. The more obstacles we can find, the more precise will our estimation be.
 
