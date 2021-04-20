@@ -1,8 +1,8 @@
 ---
-title: Short story about estimations
+title: Architecture toolbox&colon; estimations
 layout: post
 date: 2021-04-07
-categories: [tech]
+categories: [architecture-toolbox]
 tags: [estimation, implementation, risks, howto]
 ---
 

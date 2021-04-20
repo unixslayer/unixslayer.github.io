@@ -8,4 +8,5 @@
     </h1>
     {% include post-date.md %}
     {{ post.excerpt }}
+    <a href="{{ post.url }}">Continue reading &raquo;</a>
 </div>

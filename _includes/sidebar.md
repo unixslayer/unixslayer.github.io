@@ -4,6 +4,7 @@
       <a class="sidebar-nav-item{% if page.url == site.baseurl %} active{% endif %}" href="{{ site.baseurl }}/">Home</a>
       <br/>
       <a class="sidebar-nav-item{% if page.url == "articles" %} active{% endif %}" href="{{ site.baseurl }}/c/tech">Tech</a>
+      <a class="sidebar-nav-item{% if page.url == "articles" %} active{% endif %}" href="{{ site.baseurl }}/c/architecture-toolbox">Architecture toolbox</a>
       <a class="sidebar-nav-item{% if page.url == "articles" %} active{% endif %}" href="{{ site.baseurl }}/c/diary">Diary</a>
       <br/>
       <a class="sidebar-nav-item{% if page.url == "articles" %} active{% endif %}" href="{{ site.baseurl }}/c/true-events">Based on true events</a>
